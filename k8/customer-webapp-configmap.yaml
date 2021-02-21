@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  REACT_APP_API_URL: /graphql/
+  REACT_APP_KEYCLOAK_CLIENT: web-client
+  REACT_APP_KEYCLOAK_REALM: we-do-takeaway
+  REACT_APP_KEYCLOAK_URL: http://www.wedotakeaway.com/auth
+kind: ConfigMap
+metadata:
+  labels:
+    service: customer-webapp-customer-webapp-env
+  name: customer-webapp-env

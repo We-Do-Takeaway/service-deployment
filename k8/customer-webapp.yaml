@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: customer-webapp
+  name: customer-webapp
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    service: customer-webapp
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: customer-webapp
+  name: customer-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: customer-webapp
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: customer-webapp
+    spec:
+      containers:
+        - env:
+            - name: REACT_APP_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: REACT_APP_API_URL
+                  name: customer-webapp-env
+            - name: REACT_APP_KEYCLOAK_CLIENT
+              valueFrom:
+                configMapKeyRef:
+                  key: REACT_APP_KEYCLOAK_CLIENT
+                  name: customer-webapp-env
+            - name: REACT_APP_KEYCLOAK_REALM
+              valueFrom:
+                configMapKeyRef:
+                  key: REACT_APP_KEYCLOAK_REALM
+                  name: customer-webapp-env
+            - name: REACT_APP_KEYCLOAK_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: REACT_APP_KEYCLOAK_URL
+                  name: customer-webapp-env
+          image: wedotakeaway/customer-webapp:0.0.1
+          name: customer-webapp
+          ports:
+            - containerPort: 80
+          resources: {}
+      restartPolicy: Always
+status: {}

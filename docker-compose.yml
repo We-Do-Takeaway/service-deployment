@@ -1,0 +1,28 @@
+version: "3.1"
+
+services:
+  db:
+    image: postgres:13.2-alpine
+    env_file:
+      - db.env
+  server:
+    image: wedotakeaway/wdt-server:0.0.1
+    env_file:
+      - server.env
+    depends_on:
+      - db
+  customer-webapp:
+    image: wedotakeaway/customer-webapp:0.0.1
+    env_file:
+      - customer-webapp.env
+    ports:
+      - 8001:80
+  web-ingress:
+    build:
+      context: ./wdt-ingress
+      dockerfile: Dockerfile
+    depends_on:
+      - server
+      - customer-webapp
+    ports:
+      - 8000:80
